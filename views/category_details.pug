@@ -1,0 +1,13 @@
+extends layout
+
+block content
+  h1= title
+
+  h2= category.name
+    p
+      | Items: 
+      each item, index in category.items
+        if index > 0
+          | , 
+        | #{item.name}
+    p= category.description
