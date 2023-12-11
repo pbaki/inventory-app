@@ -1,0 +1,13 @@
+Category: 
+name : str  req max 100
+description : str  req max 100
+items : type Schema, items obj id, ref Item
+url : /catalog/categories/this.id
+
+Item:
+name : str  req max 100
+description : str  req max 100
+price : Number
+category : str, enum[Cats, Dogs], default cats, req 
+in_stock : Number
+url : category url
