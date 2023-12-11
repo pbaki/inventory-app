@@ -1,0 +1,11 @@
+extends layout
+
+block content
+  h1= title
+  p Welcome to #[em Inventory app]
+
+  h1 App Contents
+
+  ul
+    li #[strong Categories:] !{categories_quantity}
+    li #[strong Items:] !{items_quantity}

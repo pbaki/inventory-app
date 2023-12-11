@@ -5,5 +5,12 @@ const { body, validationResult } = require("express-validator");
 
 // Display list of all Categories.
 exports.index = asyncHandler(async (req, res, next) => {
-  res.send("NOT IMPLEMENTED YET");
+  const categoryQuantity = await Category.countDocuments();
+  const itemQuantity = await Item.countDocuments();
+
+  res.render("index", {
+    title: "Contents",
+    categories_quantity: categoryQuantity,
+    items_quantity: itemQuantity,
+  });
 });
