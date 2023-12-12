@@ -9,5 +9,5 @@ block content
       each item, index in category.items
         if index > 0
           | , 
-        | #{item.name}
+        a(href=item.url)  #{item.name}
     p= category.description
