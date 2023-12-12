@@ -97,11 +97,13 @@ exports.item_delete_post = asyncHandler(async (req, res, next) => {
 });
 
 exports.item_update_get = asyncHandler(async (req, res, next) => {
-  const item = await Item.findById(req.params.id);
-  const category = await Category.find();
+  const [item, category] = await Promise.all([
+    await Item.findById(req.params.id),
+    await Category.find(),
+  ]);
 
   res.render("item_form", {
-    title: "Update Item",
+    title: "Update Product",
     item: item,
     categories: category,
   });
@@ -123,27 +125,31 @@ exports.item_update_post = asyncHandler(async (req, res, next) => {
   ];
   const errors = validationResult(req);
 
-  const finditem = await Item.findById(req.params.id);
+  const [item, category] = await Promise.all([
+    await Item.findById(req.params.id),
+    await Category.find(),
+  ]);
 
-  const item = new Item({
+  const newitem = new Item({
     name: req.body.name,
     description: req.body.description,
     price: req.body.price,
     in_stock: req.body.instock,
     category: req.body.category,
-    _id: finditem.id,
+    _id: item.id,
   });
 
   if (!errors.isEmpty()) {
-    res.render("category_form", {
-      title: "Create category",
-      items: items,
+    res.render("item_form", {
+      title: "Update Product",
+      item: item,
+      categories: category,
     });
     return;
   } else {
-    if (finditem.name.length > 0) {
-      await Item.findByIdAndUpdate(finditem.id, item);
-      res.redirect(item.url);
+    if (item.name.length > 0) {
+      await Item.findByIdAndUpdate(item.id, newitem);
+      res.redirect(newitem.url);
     } else {
       res.redirect("/catalog/items");
     }
