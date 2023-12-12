@@ -1,0 +1,23 @@
+extends layout 
+
+block content
+  h1=title
+
+  form(method='POST' action='')
+    div.form-group
+      label(for='name') Name:
+      input#name.form-control(type='text' placeholder='Category Name' name='name' required='true' value=(undefined===category ? '' : category.name) )
+      br
+      label(for='description') Description:
+      input#description.form-control(type='text' placeholder='Description' name='description' required='true' value=(undefined===category ? '' : category.description))
+    div.form-group
+      each item in items
+        div.form-check
+          input.form-check-input(type='checkbox' name=item.name checked=(category && category.items.some(e => e.name === item.name)) ? 'checked' : undefined )
+          label.form-check-label.mb-3(for=item.name) #{item.name}
+
+    button.btn.btn-primary(type='submit') Submit
+  if errors
+    ul
+      for error in errors
+        li!= error.msg

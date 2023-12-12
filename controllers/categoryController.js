@@ -32,17 +32,9 @@ exports.category_detail = asyncHandler(async (req, res, next) => {
   });
 });
 
-exports.category_create_get = asyncHandler(async (req, res, next) => {
-  res.send("Not implemented yet");
-});
-
-exports.category_create_post = asyncHandler(async (req, res, next) => {
-  res.send("Not implemented yet");
-});
-
 exports.category_delete_get = asyncHandler(async (req, res, next) => {
   const category = await Category.findById(req.params.id).populate("items");
-  console.log(category);
+
   if (category === null) {
     res.redirect("/catalog/categories");
   }
@@ -71,10 +63,119 @@ exports.category_delete_post = asyncHandler(async (req, res, next) => {
   }
 });
 
+exports.category_create_get = asyncHandler(async (req, res, next) => {
+  const items = await Item.find().sort({ name: 1 });
+
+  res.render("category_form", {
+    title: "Create category",
+    items: items,
+  });
+});
+
+exports.category_create_post = asyncHandler(async (req, res, next) => {
+  [
+    body("name", "name must contain at least 2 characters")
+      .trim()
+      .isLength({ min: 2 })
+      .escape(),
+    body("description", "description name must contain at least 2 characters")
+      .trim()
+      .isLength({ min: 2 })
+      .escape(),
+  ];
+  const errors = validationResult(req);
+
+  const items = await Item.find().sort({ name: 1 });
+  const itemsToAdd = [];
+
+  for (let item in req.body) {
+    const found = await Item.find({ name: item });
+    if (found.length > 0) {
+      Array.prototype.push.apply(itemsToAdd, found);
+    }
+  }
+
+  const category = new Category({
+    name: req.body.name,
+    description: req.body.description,
+    items: itemsToAdd,
+  });
+
+  if (!errors.isEmpty()) {
+    res.render("category_form", {
+      title: "Create category",
+      items: items,
+    });
+    return;
+  } else {
+    const categoryExists = await Category.findOne({ name: req.body.name });
+    if (categoryExists) {
+      res.redirect(categoryExists.url);
+    } else {
+      await category.save();
+      res.redirect(category.url);
+    }
+  }
+});
+
 exports.category_update_get = asyncHandler(async (req, res, next) => {
-  res.send("Not implemented yet");
+  const items = await Item.find().sort({ name: 1 });
+  const category = await Category.findById(req.params.id).populate("items");
+
+  res.render("category_form", {
+    title: "Update category",
+    items: items,
+    category: category,
+  });
 });
 
 exports.category_update_post = asyncHandler(async (req, res, next) => {
-  res.send("Not implemented yet");
+  [
+    body("name", "name must contain at least 2 characters")
+      .trim()
+      .isLength({ min: 2 })
+      .escape(),
+    body("description", "description name must contain at least 2 characters")
+      .trim()
+      .isLength({ min: 2 })
+      .escape(),
+  ];
+  const errors = validationResult(req);
+
+  const [items, cat] = await Promise.all([
+    await Item.find().sort({ name: 1 }),
+    await Category.findById(req.params.id),
+  ]);
+
+  const itemsToAdd = [];
+
+  for (let item in req.body) {
+    const found = await Item.find({ name: item });
+    if (found.length > 0) {
+      Array.prototype.push.apply(itemsToAdd, found);
+    }
+  }
+  console.log(cat.name.length);
+
+  const category = new Category({
+    name: req.body.name,
+    description: req.body.description,
+    items: itemsToAdd,
+    _id: cat.id,
+  });
+
+  if (!errors.isEmpty()) {
+    res.render("category_form", {
+      title: "Create category",
+      items: items,
+    });
+    return;
+  } else {
+    if (cat.name.length > 0) {
+      await Category.findByIdAndUpdate(cat.id, category);
+      res.redirect(category.url);
+    } else {
+      res.redirect("/catalog/categories");
+    }
+  }
 });
