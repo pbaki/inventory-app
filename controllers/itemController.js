@@ -31,11 +31,24 @@ exports.item_create_post = asyncHandler(async (req, res, next) => {
 });
 
 exports.item_delete_get = asyncHandler(async (req, res, next) => {
-  res.send("Not implemented yet");
+  const item = await Item.findById(req.params.id).exec();
+
+  if (item === null) {
+    res.redirect("/catalog/items");
+  }
+
+  res.render("item_delete", {
+    title: "Delete item",
+    item: item,
+  });
 });
 
 exports.item_delete_post = asyncHandler(async (req, res, next) => {
-  res.send("Not implemented yet");
+  const item = await Item.findById(req.body.itemid);
+  console.log(item.id);
+
+  await Item.findByIdAndDelete(item.id);
+  res.redirect("/catalog/items");
 });
 
 exports.item_update_get = asyncHandler(async (req, res, next) => {

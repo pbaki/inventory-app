@@ -9,3 +9,6 @@ block content
     p In stock: #{item.in_stock}
     p Price: #{item.price} $
     p Description: #{item.description}
+  a(href=item.url+'/delete') Delete item
+  br
+  a(href=item.url+'/update') Update item
