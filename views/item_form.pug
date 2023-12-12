@@ -6,10 +6,10 @@ block content
   form(method='POST' action='')
     div.form-group
       label(for='name') Name:
-      input#name.form-control(type='text' placeholder='Item Name' name='name' required='true' value=(undefined===item ? '' : item.name) )
+      input#name.form-control(type='text' placeholder='Product Name' name='name' required='true' value=(undefined===item ? '' : item.name) )
       br
       label(for='description') Description:
-      input#description.form-control(type='text' placeholder='Description Name' name='description' required='true' value=(undefined===item ? '' : item.description) )
+      input#description.form-control(type='text' placeholder='Description' name='description' required='true' value=(undefined===item ? '' : item.description) )
       br
       label(for='price') Price:
       input#price.form-control(type='number' placeholder='Price' name='price' required='true' value=(undefined===item ? '' : item.price) )

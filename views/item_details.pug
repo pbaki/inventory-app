@@ -3,7 +3,7 @@ extends layout
 block content
   h1= title
 
-  h2= item.name
+  h2 Product name: #{item.name}
   p Category: 
     a(href=category.url) #{item.category}
     p In stock: #{item.in_stock}

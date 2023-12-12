@@ -3,14 +3,14 @@ extends layout
 block content
   h1= title
 
-  h2= category.name
+  h2 Category name: #{category.name}
     p
-      | Items: 
+      | Products: 
       each item, index in category.items
         if index > 0
           | , 
         a(href=item.url)  #{item.name}
-    p= category.description
+    p Description: #{category.description}
   a(href=category.url+'/delete') Delete category
   br
   a(href=category.url+'/update') Update category

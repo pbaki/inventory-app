@@ -4,7 +4,7 @@ block content
   h1 #{title}
 
   if category.items.length > 0
-    p You need to delete these items first 
+    p You need to delete these products first 
     each item in category.items
       a(href=item.url) #{item.name}
       br

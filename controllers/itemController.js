@@ -7,7 +7,7 @@ exports.item_list = asyncHandler(async (req, res, next) => {
   const Allitems = await Item.find().sort({ name: 1 });
 
   res.render("item_list", {
-    title: "All Items",
+    title: "All Products",
     items: Allitems,
   });
 });
@@ -17,7 +17,7 @@ exports.item_detail = asyncHandler(async (req, res, next) => {
   const category = await Category.find({ name: item.category });
 
   res.render("item_details", {
-    title: "Item details",
+    title: "Product details",
     item: item,
     category: category[0],
   });
@@ -26,7 +26,7 @@ exports.item_detail = asyncHandler(async (req, res, next) => {
 exports.item_create_get = asyncHandler(async (req, res, next) => {
   const categories = await Category.find();
   res.render("item_form", {
-    title: "Create Item",
+    title: "Create Product",
     categories: categories,
   });
 });
@@ -57,7 +57,7 @@ exports.item_create_post = asyncHandler(async (req, res, next) => {
 
   if (!errors.isEmpty()) {
     res.render("item_form", {
-      title: "Create Item",
+      title: "Create Product",
       categories: categories,
     });
     return;
@@ -83,14 +83,13 @@ exports.item_delete_get = asyncHandler(async (req, res, next) => {
   }
 
   res.render("item_delete", {
-    title: "Delete item",
+    title: "Delete Product",
     item: item,
   });
 });
 
 exports.item_delete_post = asyncHandler(async (req, res, next) => {
   const item = await Item.findById(req.body.itemid);
-  console.log(item.id);
 
   await Item.findByIdAndDelete(item.id);
   res.redirect("/catalog/items");
